@@ -1,0 +1,35 @@
+name: Build Termux Package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: '(termux-api, hidapi, python-hidapi, electrum, python-btchip, heimdall)'
+        required: true
+        default: 'heimdall'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Run Termux Build Docker
+      run: |
+        PKG_NAME="${{ github.event.inputs.package_name || 'heimdall' }}"
+        ./scripts/run-docker.sh ./build-package.sh $PKG_NAME
+
+    - name: Upload Artifacts
+      uses: actions/artifacts-upload@v4
+      with:
+        name: termux-packages
+        path: ./output/*
+
