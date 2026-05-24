@@ -28,7 +28,7 @@ jobs:
         ./scripts/run-docker.sh ./build-package.sh $PKG_NAME
 
     - name: Upload Artifacts
-      uses: actions/artifacts-upload@v4
+      uses: actions/upload-artifact@v4
       with:
         name: termux-packages
         path: ./output/*
